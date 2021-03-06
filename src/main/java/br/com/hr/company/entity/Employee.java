@@ -1,5 +1,6 @@
 package br.com.hr.company.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -27,7 +28,7 @@ public class Employee implements Serializable {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "hire_date")
+    @Column(name = "hire_date", nullable = false, columnDefinition = "date")
     private Date hireDate;
 
     @Column(name = "job_id")
@@ -42,6 +43,7 @@ public class Employee implements Serializable {
     @Column(name = "manager_id")
     private Integer managerId;
 
+    @JsonIgnoreProperties(value = "department_name", allowGetters = true)
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "department_id", referencedColumnName = "department_id")
     private Department department;

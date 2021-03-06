@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/hr")
@@ -72,6 +73,31 @@ public class EmployeeController {
 
         List<Employee> response = service.findEmployeeWithCriteriaSpec(request.getDeptId(), request.getSalaryMin(), request.getSalaryMax());
         return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/employees")
+    public ResponseEntity<Employee> saveEmployeer(@RequestHeader Map<String, String> headers,
+                                                  @RequestBody Employee emp){
+
+        headers.forEach((key, value) -> {
+            System.out.println("header: " + key + " : " + value);
+            if(key.equals("host")){
+                System.out.println("-> " + value);
+            }
+        });
+
+        System.out.println(headers.toString());
+
+        Employee employee = service.saveEmployee(emp);
+
+        Page<Employee> employees = service.findAll(Integer.parseInt("0"), Integer.parseInt("100"));
+
+        employees.forEach((e)  -> System.out.println(e.getFirstName()));
+
+        Employee emp2 = service.findEmployeeById(emp.getEmployeeId());
+
+        return ResponseEntity.ok().body(emp2);
+
     }
 
 }
